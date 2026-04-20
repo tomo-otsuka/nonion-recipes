@@ -495,3 +495,130 @@ hr {
     color: #bbb;
   }
 }
+
+/* HTML Recipe Layouts */
+.recipe-hero {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+.recipe-description {
+  font-size: 1.15rem;
+  color: #444;
+  margin-bottom: 2rem;
+  max-width: 800px;
+}
+
+@media (prefers-color-scheme: dark) {
+  .recipe-description { color: #ccc; }
+}
+
+.recipe-badges {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.badge {
+  display: flex;
+  flex-direction: column;
+  background: var(--card-bg);
+  border: 1px solid rgba(0,0,0,0.05);
+  padding: 0.75rem 1.25rem;
+  border-radius: 8px;
+  min-width: 120px;
+}
+
+@media (prefers-color-scheme: dark) {
+  .badge { border-color: rgba(255,255,255,0.05); box-shadow: 0 4px 6px rgba(0,0,0,0.2); }
+}
+
+.badge-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #888;
+  font-weight: 600;
+  margin-bottom: 0.2rem;
+}
+
+.badge-value {
+  font-size: 1.1rem;
+  font-family: var(--font-serif);
+  font-weight: 700;
+  color: var(--accent-dashi);
+}
+
+.flavor-swap-panel {
+  display: flex;
+  background: rgba(211, 106, 34, 0.05);
+  border: 1px solid rgba(211, 106, 34, 0.2);
+  border-left: 4px solid var(--accent-dashi);
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 3rem;
+  gap: 1rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  .flavor-swap-panel { background: rgba(211, 106, 34, 0.1); }
+}
+
+.panel-icon {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.panel-content strong {
+  display: block;
+  font-family: var(--font-serif);
+  color: var(--accent-dashi);
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.panel-content p {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.recipe-layout-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 3rem;
+}
+
+@media (min-width: 900px) {
+  .recipe-layout-grid {
+    grid-template-columns: 350px 1fr;
+    gap: 4rem;
+  }
+  
+  .recipe-ingredients {
+    position: sticky;
+    top: 100px; /* offset for sticky header */
+    align-self: start;
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+    padding-right: 1rem;
+  }
+}
+
+.ingredient-group h3 {
+  font-family: var(--font-sans);
+  font-size: 1.1rem;
+  color: var(--text-color);
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  padding-bottom: 0.5rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  .ingredient-group h3 { border-color: rgba(255,255,255,0.05); }
+}
+
+.recipe-ingredients ul {
+  padding-left: 0;
+  list-style: none;
+}

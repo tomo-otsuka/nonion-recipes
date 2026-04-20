@@ -26,13 +26,18 @@ When adapting recipes, use your best judgment to replace the missing flavor prof
 
 ## Project Structure & Output
 - **Deployment:** This project is intended to be published as a static site via GitHub Pages.
-- **Format:** We use **pure HTML/CSS** (not Markdown) for recipes to enable premium layouts. All new recipes must be created as `.html` files in the `/recipes/` directory. Use the established HTML structure seen in existing recipes:
-  - Liquid frontmatter (`layout: default`, `title`, `permalink`).
-  - `.recipe-hero` block for the title, description, and `.recipe-badges` (Yield, Prep, Cook Time).
-  - `.flavor-swap-panel` to highlight the allium-free strategy used.
-  - `.recipe-layout-grid` with a two-column desktop layout.
-  - An `<aside class="recipe-ingredients ingredients-section">` containing the ingredients.
-  - A `<section class="recipe-instructions">` with an `<ol>` for the steps.
+- **Format:** We use **pure HTML/CSS** (not Markdown) for recipes to enable premium layouts. All new recipes must be created as `.html` files in the `/recipes/` directory. 
+- **Template:** A starter template is available at `/recipes/_template.html`. When creating a new recipe, always use this structure.
+
+### Required HTML Structure (Interactive Checklists & Counters)
+The site uses custom JavaScript in `_layouts/default.html` to automatically apply interactive styling to standard HTML lists. To ensure recipes match the site's design system:
+1. **Ingredients:** Must be placed inside `<aside class="recipe-ingredients ingredients-section">`. Use standard `<ul>` and `<li>` tags. The JS will automatically transform these into interactive checklists that dim and strike through when tapped. (Do NOT add `class="ingredient-list"` manually).
+2. **Instructions:** Must be placed inside `<section class="recipe-instructions">`. Use standard `<ol>` and `<li>` tags. The JS will automatically inject elegant golden numbers for the steps.
+3. **Other Layout Components:**
+   - Liquid frontmatter (`layout: default`, `title`, `permalink`).
+   - `.recipe-hero` block for the `<h1>`, `.recipe-description`, and `.recipe-badges` (Yield, Prep, Cook Time).
+   - `.flavor-swap-panel` to highlight the allium-free strategy used.
+   - `.recipe-layout-grid` with a two-column desktop layout containing the ingredients aside and instructions section.
 
 ## Tone
 - Friendly, encouraging, and focused on flavor. We want to show that allium-free food can be just as delicious and complex as traditional recipes.

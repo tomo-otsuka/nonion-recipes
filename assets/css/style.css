@@ -402,96 +402,96 @@ hr {
   }
 }
 
-/* Strategy Grid */
-.strategy-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 2rem;
+/* Troubleshooting Guide Stack */
+.troubleshooting-guide {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
   margin-top: 3rem;
-  align-items: start;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-.strategy-card {
+.scenario-card {
   background: var(--card-bg);
   border-radius: 12px;
-  padding: 2rem;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+  padding: 2.5rem;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.03);
   border: 1px solid rgba(0,0,0,0.05);
-  height: 100%;
 }
 
 @media (prefers-color-scheme: dark) {
-  .strategy-card {
+  .scenario-card {
     border-color: rgba(255,255,255,0.05);
-    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
   }
 }
 
-.strategy-card h3 {
+.scenario-card h3 {
   margin-top: 0;
-  color: var(--accent-dashi);
+  color: var(--text-color);
   font-size: 1.8rem;
-  border-bottom: 2px solid rgba(0,0,0,0.05);
-  padding-bottom: 1rem;
   margin-bottom: 1.5rem;
 }
 
+.problem-statement {
+  background: rgba(211, 106, 34, 0.05); /* Very light Dashi Amber */
+  border-left: 4px solid var(--accent-dashi);
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 2rem;
+  border-radius: 0 8px 8px 0;
+  font-size: 1.05rem;
+  color: #444;
+}
+
 @media (prefers-color-scheme: dark) {
-  .strategy-card h3 {
-    border-bottom: 2px solid rgba(255,255,255,0.05);
+  .problem-statement {
+    background: rgba(211, 106, 34, 0.1);
+    color: #ddd;
   }
 }
 
-.strategy-desc {
-  font-size: 1.05rem;
-  margin-bottom: 2rem;
-  color: #555;
+.problem-statement strong {
+  color: var(--accent-dashi);
+  font-family: var(--font-serif);
+  font-size: 1.2rem;
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.solution-box {
+  background: rgba(139, 168, 136, 0.05); /* Very light fennel */
+  border: 1px solid rgba(139, 168, 136, 0.3);
+  border-top: 4px solid var(--accent-fennel);
+  padding: 1.5rem;
+  border-radius: 8px;
 }
 
 @media (prefers-color-scheme: dark) {
-  .strategy-desc {
+  .solution-box {
+    background: rgba(139, 168, 136, 0.1);
+    border-color: rgba(139, 168, 136, 0.2);
+  }
+}
+
+.solution-box strong {
+  color: var(--accent-fennel);
+  font-family: var(--font-serif);
+  font-size: 1.3rem;
+  display: block;
+  margin-bottom: 0.75rem;
+}
+
+.solution-box p {
+  margin: 0;
+  font-size: 1rem;
+  color: #555;
+  line-height: 1.6;
+}
+
+@media (prefers-color-scheme: dark) {
+  .solution-box p {
     color: #bbb;
   }
-}
-
-.ingredient-highlight {
-  background: rgba(139, 168, 136, 0.05); /* Very light fennel */
-  border-left: 4px solid var(--accent-fennel);
-  padding: 1.25rem;
-  margin-bottom: 1.5rem;
-  border-radius: 0 8px 8px 0;
-}
-
-@media (prefers-color-scheme: dark) {
-  .ingredient-highlight {
-    background: rgba(139, 168, 136, 0.1);
-  }
-}
-
-.ingredient-highlight h4 {
-  margin-top: 0;
-  margin-bottom: 0.5rem;
-  font-family: var(--font-sans);
-  font-weight: 700;
-  font-size: 1.1rem;
-  color: var(--text-color);
-}
-
-.ingredient-highlight p {
-  margin: 0;
-  font-size: 0.95rem;
-  color: #666;
-}
-
-@media (prefers-color-scheme: dark) {
-  .ingredient-highlight p {
-    color: #aaa;
-  }
-}
-
-.flavor-swap-note {
-  margin-top: 0.75rem !important;
-  font-style: italic;
-  font-size: 0.85rem !important;
-  color: var(--accent-dashi) !important;
 }

@@ -26,13 +26,13 @@ When adapting recipes, use your best judgment to replace the missing flavor prof
 
 ## Project Structure & Output
 - **Deployment:** This project is intended to be published as a static site via GitHub Pages.
-- **Format:** Use clear, easy-to-read Markdown for all recipes. Standardize the recipe format to include:
-  - Recipe Title
-  - Brief Description
-  - Yield, Prep Time, Cook Time
-  - Ingredients (with precise measurements)
-  - Instructions (numbered steps)
-  - Notes (especially highlighting the allium-free strategy or substitutions used)
+- **Format:** We use **pure HTML/CSS** (not Markdown) for recipes to enable premium layouts. All new recipes must be created as `.html` files in the `/recipes/` directory. Use the established HTML structure seen in existing recipes:
+  - Liquid frontmatter (`layout: default`, `title`, `permalink`).
+  - `.recipe-hero` block for the title, description, and `.recipe-badges` (Yield, Prep, Cook Time).
+  - `.flavor-swap-panel` to highlight the allium-free strategy used.
+  - `.recipe-layout-grid` with a two-column desktop layout.
+  - An `<aside class="recipe-ingredients ingredients-section">` containing the ingredients.
+  - A `<section class="recipe-instructions">` with an `<ol>` for the steps.
 
 ## Tone
 - Friendly, encouraging, and focused on flavor. We want to show that allium-free food can be just as delicious and complex as traditional recipes.

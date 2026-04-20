@@ -20,9 +20,15 @@ The colors should evoke the warmth of a kitchen and the natural vibrancy of the 
   * **Deep Charcoal:** Use instead of pure black for reduced eye strain.
 
 ## 3. Typography
-* **Headings:** A classic, elegant serif font (e.g., *Playfair Display*, *Lora*, or *Merriweather*). This provides a sense of culinary authority and tradition.
-* **Body Text & Instructions:** A clean, highly legible sans-serif font (e.g., *Inter*, *Outfit*, or *Nunito*). Readability is paramount for someone actively cooking.
-* **Accents:** Use italics strategically for flavor notes, ingredient descriptions, and substitutions to give them a thoughtful, poetic feel.
+- Header Font: *Playfair Display* (Serif, for elegance and tradition)
+- Body Font: *Inter* (Sans-serif, for modern readability)
+
+### UI Patterns & Layouts
+- **Glassmorphism Header:** The main navigation uses a translucent frosted-glass effect to remain visible but unobtrusive while scrolling.
+- **Interactive Ingredients:** Ingredient lists (`ul` inside `.ingredients-section`) are automatically transformed into clickable checklists that dim and strike through when tapped.
+- **Instruction Counters:** Instruction steps (`ol`) automatically generate large, golden serif numbers to guide the eye.
+- **Problem-Solution Guides:** For informational pages (like Substitutions), use a vertical, single-column stack with `.problem-title` (Dashi Amber accent) and `.solution-box` (Fennel Green accent) to create actionable troubleshooting guides.
+- **Recipe Pages (HTML):** Recipes must be built in pure HTML (not Markdown) using the `.recipe-layout-grid` class to create a two-column desktop layout (sticky ingredients on the left, instructions on the right). Use `.recipe-badges` for metadata and `.flavor-swap-panel` for highlighting allium substitutions.
 
 ## 4. UI & Layout Elements
 * **The "Flavor Swap" Callout:** A dedicated, beautifully styled card or quote block in every recipe that highlights the clever substitution used (e.g., *"Why this works: A splash of Hondashi and toasted fennel seed replaces the traditional onion base..."*).

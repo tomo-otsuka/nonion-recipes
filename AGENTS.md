@@ -28,6 +28,7 @@ When adapting recipes, use your best judgment to replace the missing flavor prof
 - **Deployment:** This project is intended to be published as a static site via GitHub Pages.
 - **Format:** We use **pure HTML/CSS** (not Markdown) for recipes to enable premium layouts. All new recipes must be created as `.html` files in the `/recipes/` directory. 
 - **Template:** A starter template is available at `/recipes/_template.html`. When creating a new recipe, always use this structure.
+- **Updating the Homepage:** Whenever you create a new recipe, you MUST automatically update `index.html` to include a new `<article class="recipe-card">` for the new recipe inside the `.recipe-grid`. Include the relative URL link, the recipe title, and a short 1-2 sentence description.
 
 ### Required HTML Structure (Interactive Checklists & Counters)
 The site uses custom JavaScript in `_layouts/default.html` to automatically apply interactive styling to standard HTML lists. To ensure recipes match the site's design system:

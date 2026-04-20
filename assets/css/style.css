@@ -224,6 +224,7 @@ a:hover {
   border: 1px solid rgba(0,0,0,0.05);
   display: flex;
   flex-direction: column;
+  position: relative;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -252,6 +253,16 @@ a:hover {
 
 .recipe-card h2 a {
   color: var(--text-color);
+}
+
+.recipe-card h2 a::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1;
 }
 
 .recipe-card h2 a:hover {
@@ -389,4 +400,98 @@ hr {
   .instruction-list li::before {
     opacity: 0.9;
   }
+}
+
+/* Strategy Grid */
+.strategy-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem;
+  margin-top: 3rem;
+  align-items: start;
+}
+
+.strategy-card {
+  background: var(--card-bg);
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+  border: 1px solid rgba(0,0,0,0.05);
+  height: 100%;
+}
+
+@media (prefers-color-scheme: dark) {
+  .strategy-card {
+    border-color: rgba(255,255,255,0.05);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+  }
+}
+
+.strategy-card h3 {
+  margin-top: 0;
+  color: var(--accent-dashi);
+  font-size: 1.8rem;
+  border-bottom: 2px solid rgba(0,0,0,0.05);
+  padding-bottom: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  .strategy-card h3 {
+    border-bottom: 2px solid rgba(255,255,255,0.05);
+  }
+}
+
+.strategy-desc {
+  font-size: 1.05rem;
+  margin-bottom: 2rem;
+  color: #555;
+}
+
+@media (prefers-color-scheme: dark) {
+  .strategy-desc {
+    color: #bbb;
+  }
+}
+
+.ingredient-highlight {
+  background: rgba(139, 168, 136, 0.05); /* Very light fennel */
+  border-left: 4px solid var(--accent-fennel);
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+  border-radius: 0 8px 8px 0;
+}
+
+@media (prefers-color-scheme: dark) {
+  .ingredient-highlight {
+    background: rgba(139, 168, 136, 0.1);
+  }
+}
+
+.ingredient-highlight h4 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--text-color);
+}
+
+.ingredient-highlight p {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #666;
+}
+
+@media (prefers-color-scheme: dark) {
+  .ingredient-highlight p {
+    color: #aaa;
+  }
+}
+
+.flavor-swap-note {
+  margin-top: 0.75rem !important;
+  font-style: italic;
+  font-size: 0.85rem !important;
+  color: var(--accent-dashi) !important;
 }

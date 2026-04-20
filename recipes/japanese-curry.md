@@ -21,6 +21,8 @@ Traditionally, Japanese curry relies heavily on deeply caramelized onions to pro
 
 ## Ingredients
 
+<div class="ingredients-section">
+
 ### The Custom Roux
 * 3 tbsp unsalted butter
 * Pinch (1/8th tsp or less) hing (asafoetida) — *to bloom in the melting butter*
@@ -48,6 +50,8 @@ Traditionally, Japanese curry relies heavily on deeply caramelized onions to pro
 
 ### For Serving
 * Cooked short-grain Japanese rice
+
+</div>
 
 ## Instructions
 

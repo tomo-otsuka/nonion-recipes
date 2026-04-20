@@ -15,7 +15,7 @@
       <a href="{{ '/' | relative_url }}" class="site-title">{{ site.title }}</a>
       <nav class="site-nav">
         <a href="{{ '/' | relative_url }}">Recipes</a>
-        <a href="{{ '/' | relative_url }}">Philosophy</a>
+        <a href="{{ '/substitutions/' | relative_url }}">Substitutions</a>
       </nav>
     </div>
   </header>
@@ -41,8 +41,8 @@
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-      // Add interactive checkboxes to ingredient lists (all unordered lists in content)
-      const ingredientLists = document.querySelectorAll(".page-content ul");
+      // Add interactive checkboxes to ingredient lists
+      const ingredientLists = document.querySelectorAll(".ingredients-section ul");
       ingredientLists.forEach(ul => {
         ul.classList.add("ingredient-list");
         ul.querySelectorAll("li").forEach(li => {

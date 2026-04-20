@@ -1,0 +1,5 @@
+title: Nonion Recipes
+description: A collection of beautiful, flavor-packed allium-free recipes.
+url: ""
+baseurl: ""
+theme: jekyll-theme-blank # Minimal base theme to ensure our CSS takes precedence

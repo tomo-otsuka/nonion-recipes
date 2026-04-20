@@ -63,23 +63,63 @@ a:hover {
 
 /* Header */
 .site-header {
-  padding: 3rem 0;
-  text-align: center;
+  padding: 1rem 0;
   border-bottom: 1px solid rgba(0,0,0,0.05);
   margin-bottom: 3rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background-color: rgba(253, 250, 246, 0.85); /* Parchment with opacity */
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 @media (prefers-color-scheme: dark) {
   .site-header {
+    background-color: rgba(26, 27, 30, 0.85); /* Charcoal with opacity */
     border-bottom: 1px solid rgba(255,255,255,0.05);
   }
 }
 
+.header-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .site-title {
   font-family: var(--font-serif);
-  font-size: 2.5rem;
+  font-size: 1.5rem;
   font-weight: 700;
   color: var(--text-color);
+  line-height: 1;
+}
+
+.site-nav {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.site-nav a {
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--text-color);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.site-nav a:hover {
+  color: var(--accent-dashi);
+}
+
+@media (prefers-color-scheme: dark) {
+  .site-nav a {
+    color: #e0e0e0;
+  }
+  .site-nav a:hover {
+    color: var(--accent-turmeric);
+  }
 }
 
 /* Intro styling */

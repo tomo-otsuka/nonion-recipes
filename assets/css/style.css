@@ -452,11 +452,11 @@ hr {
   }
 }
 
-.problem-statement strong {
+.problem-title {
   color: var(--accent-dashi);
   font-family: var(--font-serif);
   font-size: 1.2rem;
-  display: block;
+  margin-top: 0;
   margin-bottom: 0.25rem;
 }
 
@@ -475,11 +475,11 @@ hr {
   }
 }
 
-.solution-box strong {
+.solution-title {
   color: var(--accent-fennel);
   font-family: var(--font-serif);
   font-size: 1.3rem;
-  display: block;
+  margin-top: 0;
   margin-bottom: 0.75rem;
 }
 

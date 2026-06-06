@@ -46,6 +46,8 @@
       ingredientLists.forEach(ul => {
         ul.classList.add("ingredient-list");
         ul.querySelectorAll("li").forEach(li => {
+          // Store original HTML for scaling
+          li.dataset.originalHtml = li.innerHTML;
           li.addEventListener("click", () => {
             li.classList.toggle("checked");
           });
@@ -57,6 +59,175 @@
       instructionLists.forEach(ol => {
         ol.classList.add("instruction-list");
       });
+
+      // --- Recipe Scaler Logic ---
+      const yieldBadge = Array.from(document.querySelectorAll('.badge')).find(b => 
+        b.querySelector('.badge-label') && b.querySelector('.badge-label').textContent.trim().toLowerCase() === 'yield'
+      );
+
+      if (yieldBadge) {
+        const badgeValueEl = yieldBadge.querySelector('.badge-value');
+        if (badgeValueEl) {
+          const originalText = badgeValueEl.textContent.trim();
+          const match = originalText.match(/(\d+)/);
+          
+          if (match) {
+            const baseServings = parseInt(match[1], 10);
+            let currentServings = baseServings;
+
+            // Determine suffix (e.g. "servings")
+            let suffix = 'servings';
+            const words = originalText.split(/\s+/);
+            const lastWord = words[words.length - 1];
+            if (lastWord && !/\d/.test(lastWord)) {
+              suffix = lastWord;
+            }
+
+            // Update DOM to include scaler
+            badgeValueEl.style.display = 'none'; // hide original text
+            
+            const scalerDiv = document.createElement('div');
+            scalerDiv.className = 'servings-scaler';
+            scalerDiv.innerHTML = `
+              <button class="scaler-btn minus" aria-label="Decrease servings">-</button>
+              <span class="scaler-value">${currentServings}</span>
+              <button class="scaler-btn plus" aria-label="Increase servings">+</button>
+            `;
+            
+            const servingsText = document.createElement('span');
+            servingsText.style.fontSize = '0.9rem';
+            servingsText.style.color = 'var(--text-color)';
+            servingsText.style.fontWeight = '500';
+            servingsText.style.marginTop = '0.2rem';
+            servingsText.style.display = 'block';
+            servingsText.textContent = suffix;
+
+            // Insert new UI into the badge
+            yieldBadge.appendChild(scalerDiv);
+            yieldBadge.appendChild(servingsText);
+
+            const minusBtn = scalerDiv.querySelector('.minus');
+            const plusBtn = scalerDiv.querySelector('.plus');
+            const valueSpan = scalerDiv.querySelector('.scaler-value');
+
+            const parseFraction = (str) => {
+              const charMap = {'¼': 0.25, '½': 0.5, '¾': 0.75, '⅓': 0.333, '⅔': 0.666, '⅛': 0.125, '⅜': 0.375, '⅝': 0.625, '⅞': 0.875};
+              if (charMap[str]) return charMap[str];
+              if (str.includes('/')) {
+                const parts = str.split('/');
+                if (parts.length === 2) return parseInt(parts[0], 10) / parseInt(parts[1], 10);
+              }
+              return parseFloat(str);
+            };
+
+            const formatFraction = (num) => {
+              if (Math.abs(Math.round(num) - num) < 0.05) return Math.round(num).toString();
+              
+              const fractions = [
+                { val: 0.25, str: '¼' }, { val: 0.5, str: '½' }, { val: 0.75, str: '¾' },
+                { val: 0.333, str: '⅓' }, { val: 0.666, str: '⅔' },
+                { val: 0.125, str: '⅛' }, { val: 0.375, str: '⅜' },
+                { val: 0.625, str: '⅝' }, { val: 0.875, str: '⅞' }
+              ];
+              
+              let whole = Math.floor(num);
+              let remainder = num - whole;
+              let closestFrac = null;
+              let minDiff = 0.04; 
+              
+              for (let f of fractions) {
+                if (Math.abs(remainder - f.val) < minDiff) {
+                  closestFrac = f.str;
+                  minDiff = Math.abs(remainder - f.val);
+                }
+              }
+
+              if (closestFrac) {
+                return whole > 0 ? `${whole} ${closestFrac}` : closestFrac;
+              }
+              
+              return Number.isInteger(num) ? num.toString() : num.toFixed(1).replace(/\.0$/, '');
+            };
+
+            const updateIngredients = () => {
+              const scale = currentServings / baseServings;
+              
+              document.querySelectorAll(".ingredient-list li").forEach(li => {
+                let html = li.dataset.originalHtml;
+                const regex = /^(\s*~?\s*)([\d\s\/\.\-\–\—\¼\½\¾\⅓\⅔\⅛\⅜\⅝\⅞]+)(.*)$/;
+                const match = html.match(regex);
+                
+                if (match) {
+                  const prefix = match[1];
+                  const numStr = match[2].trim();
+                  let rest = match[3];
+
+                  let newNumStr = "";
+                  
+                  if (numStr.match(/[\-\–\—]/)) {
+                    // Range like "2 - 3"
+                    const parts = numStr.split(/[\-\–\—]/).map(s => s.trim());
+                    if (parts.length === 2) {
+                       let p1 = parseFraction(parts[0]);
+                       let p2 = parseFraction(parts[1]);
+                       if (!isNaN(p1) && !isNaN(p2)) {
+                         newNumStr = formatFraction(p1 * scale) + " - " + formatFraction(p2 * scale);
+                       }
+                    }
+                  } else {
+                     // Single number or mixed fraction like "1 1/2"
+                     let parts = numStr.split(/\s+/).filter(Boolean);
+                     let totalVal = 0;
+                     let valid = true;
+                     for (let p of parts) {
+                        let val = parseFraction(p);
+                        if (isNaN(val)) { valid = false; break; }
+                        totalVal += val;
+                     }
+                     if (valid && totalVal > 0) {
+                        newNumStr = formatFraction(totalVal * scale);
+                     }
+                  }
+
+                  if (newNumStr) {
+                    // Ensure there's a space after the number if the rest of the string starts with a letter
+                    if (rest && rest[0].match(/[a-zA-Z]/)) {
+                      rest = " " + rest.trimLeft();
+                    } else if (rest && rest[0] !== ' ') {
+                      // e.g. "1/2-inch slices" -> keep the dash without space
+                      // But the regex match[3] already preserves the exact trailing text
+                      // Let's just put a space if it's missing and we expect one
+                    }
+                    
+                    // Actually, match[3] starts with whatever followed the numbers. 
+                    // To be safe, we reconstruct carefully.
+                    // The regex captures trailing spaces in match[2] sometimes? No, numStr is trimmed.
+                    // Let's just add a space if rest doesn't start with space/punctuation and we want separation.
+                    // The safest is just a space, but if rest is "-inch", we don't want "2 -inch".
+                    // match[2] included the spaces between numbers. 
+                    const reconstructed = prefix + newNumStr + (rest.startsWith(' ') ? rest : (rest.startsWith('-') ? rest : ' ' + rest));
+                    li.innerHTML = reconstructed;
+                  }
+                }
+              });
+            };
+
+            minusBtn.addEventListener('click', () => {
+              if (currentServings > 1) {
+                currentServings--;
+                valueSpan.textContent = currentServings;
+                updateIngredients();
+              }
+            });
+
+            plusBtn.addEventListener('click', () => {
+              currentServings++;
+              valueSpan.textContent = currentServings;
+              updateIngredients();
+            });
+          }
+        }
+      }
     });
   </script>
 </body>

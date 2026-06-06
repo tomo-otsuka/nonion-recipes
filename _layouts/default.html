@@ -149,6 +149,78 @@
               return Number.isInteger(num) ? num.toString() : num.toFixed(1).replace(/\.0$/, '');
             };
 
+            const convertUnit = (val, unitStr) => {
+              const u = unitStr.toLowerCase();
+              if (['tsp', 'teaspoon', 'teaspoons'].includes(u)) {
+                if (val >= 48 * 4) return { val: val / 192, unit: val / 192 <= 1 ? 'quart' : 'quarts' };
+                if (val >= 12) {
+                  const cups = val / 48;
+                  const commonCups = [0.25, 0.333, 0.5, 0.666, 0.75];
+                  let isCommon = Number.isInteger(cups);
+                  if (!isCommon) {
+                    for (let c of commonCups) if (Math.abs((cups - Math.floor(cups)) - c) < 0.05) isCommon = true;
+                  }
+                  if (isCommon) return { val: cups, unit: cups <= 1 ? 'cup' : 'cups' };
+                }
+                if (val >= 3) return { val: val / 3, unit: val / 3 <= 1 ? 'tbsp' : 'tbsp' };
+                return { val, unit: val <= 1 ? 'tsp' : 'tsp' };
+              }
+              if (['tbsp', 'tablespoon', 'tablespoons', 'tbs'].includes(u)) {
+                const tspVal = val * 3;
+                if (tspVal < 3) return { val: tspVal, unit: tspVal <= 1 ? 'tsp' : 'tsp' };
+                if (tspVal >= 48 * 4) return { val: tspVal / 192, unit: tspVal / 192 <= 1 ? 'quart' : 'quarts' };
+                if (tspVal >= 12) {
+                  const cups = tspVal / 48;
+                  const commonCups = [0.25, 0.333, 0.5, 0.666, 0.75];
+                  let isCommon = Number.isInteger(cups);
+                  if (!isCommon) {
+                    for (let c of commonCups) if (Math.abs((cups - Math.floor(cups)) - c) < 0.05) isCommon = true;
+                  }
+                  if (isCommon) return { val: cups, unit: cups <= 1 ? 'cup' : 'cups' };
+                }
+                return { val, unit: val <= 1 ? 'tbsp' : 'tbsp' };
+              }
+              if (['cup', 'cups', 'c'].includes(u)) {
+                const tspVal = val * 48;
+                if (tspVal < 12) {
+                  if (tspVal >= 3) return { val: tspVal / 3, unit: tspVal / 3 <= 1 ? 'tbsp' : 'tbsp' };
+                  return { val: tspVal, unit: tspVal <= 1 ? 'tsp' : 'tsp' };
+                }
+                if (tspVal >= 48 * 4) return { val: tspVal / 192, unit: tspVal / 192 <= 1 ? 'quart' : 'quarts' };
+                return { val, unit: val <= 1 ? 'cup' : 'cups' };
+              }
+              if (['oz', 'ounce', 'ounces'].includes(u)) {
+                if (val >= 16) {
+                  const lbs = val / 16;
+                  if (Number.isInteger(lbs) || Math.abs(lbs - Math.floor(lbs)) === 0.5 || Math.abs(lbs - Math.floor(lbs)) === 0.25) {
+                    return { val: lbs, unit: lbs <= 1 ? 'lb' : 'lbs' };
+                  }
+                }
+                return { val, unit: val <= 1 ? 'oz' : 'oz' };
+              }
+              if (['lb', 'lbs', 'pound', 'pounds'].includes(u)) {
+                if (val < 1) return { val: val * 16, unit: 'oz' };
+                return { val, unit: val <= 1 ? 'lb' : 'lbs' };
+              }
+              if (['g', 'gram', 'grams'].includes(u)) {
+                if (val >= 1000) return { val: val / 1000, unit: 'kg' };
+                return { val, unit: 'g' };
+              }
+              if (['kg', 'kilogram', 'kilograms'].includes(u)) {
+                if (val < 1) return { val: val * 1000, unit: 'g' };
+                return { val, unit: 'kg' };
+              }
+              if (['ml', 'milliliter', 'milliliters'].includes(u)) {
+                if (val >= 1000) return { val: val / 1000, unit: 'L' };
+                return { val, unit: 'ml' };
+              }
+              if (['l', 'liter', 'liters'].includes(u)) {
+                if (val < 1) return { val: val * 1000, unit: 'ml' };
+                return { val, unit: 'L' };
+              }
+              return { val, unit: unitStr };
+            };
+
             const updateIngredients = () => {
               const scale = currentServings / baseServings;
               
@@ -175,7 +247,6 @@
                        }
                     }
                   } else {
-                     // Single number or mixed fraction like "1 1/2"
                      let parts = numStr.split(/\s+/).filter(Boolean);
                      let totalVal = 0;
                      let valid = true;
@@ -185,26 +256,33 @@
                         totalVal += val;
                      }
                      if (valid && totalVal > 0) {
-                        newNumStr = formatFraction(totalVal * scale);
+                        let scaledVal = totalVal * scale;
+                        
+                        // Attempt unit conversion
+                        const unitMatch = rest.match(/^\s*([a-zA-Z]+)(.*)$/);
+                        if (unitMatch) {
+                          let potentialUnit = unitMatch[1];
+                          let unitRest = unitMatch[2];
+                          
+                          let converted = convertUnit(scaledVal, potentialUnit);
+                          if (converted.unit.toLowerCase() !== potentialUnit.toLowerCase() || converted.val !== scaledVal) {
+                             newNumStr = formatFraction(converted.val);
+                             let spacing = rest.match(/^\s*/)[0];
+                             if (!spacing) spacing = ' ';
+                             rest = spacing + converted.unit + unitRest;
+                          } else {
+                             newNumStr = formatFraction(scaledVal);
+                          }
+                        } else {
+                          newNumStr = formatFraction(scaledVal);
+                        }
                      }
                   }
 
                   if (newNumStr) {
-                    // Ensure there's a space after the number if the rest of the string starts with a letter
                     if (rest && rest[0].match(/[a-zA-Z]/)) {
                       rest = " " + rest.trimLeft();
-                    } else if (rest && rest[0] !== ' ') {
-                      // e.g. "1/2-inch slices" -> keep the dash without space
-                      // But the regex match[3] already preserves the exact trailing text
-                      // Let's just put a space if it's missing and we expect one
                     }
-                    
-                    // Actually, match[3] starts with whatever followed the numbers. 
-                    // To be safe, we reconstruct carefully.
-                    // The regex captures trailing spaces in match[2] sometimes? No, numStr is trimmed.
-                    // Let's just add a space if rest doesn't start with space/punctuation and we want separation.
-                    // The safest is just a space, but if rest is "-inch", we don't want "2 -inch".
-                    // match[2] included the spaces between numbers. 
                     const reconstructed = prefix + newNumStr + (rest.startsWith(' ') ? rest : (rest.startsWith('-') ? rest : ' ' + rest));
                     li.innerHTML = reconstructed;
                   }
